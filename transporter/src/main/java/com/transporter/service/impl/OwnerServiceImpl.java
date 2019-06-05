@@ -17,6 +17,7 @@ import com.transporter.utils.ModelVoConvertUtils;
 import com.transporter.utils.PasswordUtils;
 import com.transporter.vo.OwnerVO;
 import com.transporter.vo.UserRoleVO;
+import com.transporter.vo.UserVO;
 
 @Service
 @Transactional
@@ -65,6 +66,11 @@ public class OwnerServiceImpl extends DefaultServiceImpl implements OwnerService
 		convertToModel.setUser(userModel);
 		Long ownerModel2 = (Long) saveDomain(convertToModel);
 		return ownerModel2;
+	}
+
+	@Override
+	public UserVO isUserExists(OwnerVO ownerVO) {
+		return userService.isUserExists(ownerVO.getMobileNumber());
 	}
 
 }

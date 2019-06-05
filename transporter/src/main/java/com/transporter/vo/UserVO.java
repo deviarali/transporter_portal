@@ -1,8 +1,11 @@
 package com.transporter.vo;
 
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Set;
 
+import com.transporter.model.UserModel;
+import com.transporter.model.UserRoleModel;
 import com.transporter.model.UserTypeModel;
 
 public class UserVO {
@@ -99,5 +102,28 @@ public class UserVO {
 		this.userRoles = userRoles;
 	}
     
-
+	public static UserModel convertVOToModel(UserVO userVO)
+	{
+		UserModel userModel = new UserModel();
+		if(null == userVO)
+			return null;
+		userModel.setId(userVO.getId());
+		userModel.setCreatedDate(userVO.getCreatedDate());
+		userModel.setLoginAttempts(userVO.getLoginAttempts());
+		userModel.setLoginDateTime(userVO.getLoginDateTime());
+		userModel.setLoginOtp(userVO.getLoginOtp());
+		userModel.setStatus(userVO.getStatus());
+		userModel.setUserName(userVO.getUserName());
+		userModel.setUserType(userVO.getUserType());
+		if(null != userVO.getUserRoles() && userVO.getUserRoles().size() > 0)
+		{
+			Set<UserRoleModel> roleModels = new HashSet<>();
+			for(UserRoleVO userRoleVO : userVO.getUserRoles())
+			{
+				roleModels.add(UserRoleVO.convertModelToVO(userRoleVO));
+			}
+			userModel.setUserRoles(roleModels);
+		}
+		return userModel;
+	}
 }

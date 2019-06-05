@@ -5,11 +5,13 @@ import java.io.IOException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.transporter.exception.JsonConvertException;
+import com.transporter.model.CustomerModel;
 import com.transporter.model.DriverModel;
 import com.transporter.model.OwnerModel;
 import com.transporter.model.UserModel;
 import com.transporter.model.VehicleDriverModel;
 import com.transporter.model.VehicleModel;
+import com.transporter.vo.CustomerVO;
 import com.transporter.vo.DriverVO;
 import com.transporter.vo.OwnerVO;
 import com.transporter.vo.UserVO;
@@ -117,6 +119,18 @@ public class ModelVoConvertUtils {
 	public static VehicleDriverVO convertVehicleDriverModelToVehicleDriverVO(VehicleDriverModel vehicleDriverModel) {
 		VehicleDriverVO vehicleDriverVO = convertObjectToOtherObject(vehicleDriverModel, VehicleDriverVO.class);
 		return vehicleDriverVO;
+	}
+	
+	public static CustomerModel convertCustomerVOToCustomerModel(CustomerVO customerVO)
+	{
+		CustomerModel customerModel = convertObjectToOtherObject(customerVO, CustomerModel.class);
+		return customerModel;
+	}
+	
+	public static CustomerVO convertCustomerModelToCustomerVO(CustomerModel customerModel)
+	{
+		CustomerVO customerVO = convertObjectToOtherObject(customerModel, CustomerVO.class);
+		return customerVO;
 	}
 
 	public static <T> T convertObjectToOtherObject(Object driverModel, Class<T> valueType) {

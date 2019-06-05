@@ -5,6 +5,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.transporter.vo.UserRoleVO;
+
 @SuppressWarnings("serial")
 @Entity(name = "UserRoleModel")
 @Table(name = "userrole")
@@ -30,5 +32,17 @@ public class UserRoleModel extends AbstractIdDomain {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	public static UserRoleVO convertModelToVO(UserRoleModel userRoleModel)
+	{
+		UserRoleVO userRoleVO = new UserRoleVO();
+		if(null == userRoleModel)
+			return null;
+		userRoleVO.setId(userRoleModel.getId());
+		userRoleVO.setRoleName(userRoleModel.getRoleName());
+		userRoleVO.setDescription(userRoleModel.getDescription());
+		return userRoleVO;
+	}
+	
 
 }

@@ -1,23 +1,16 @@
-package com.transporter.model;
-
+package com.transporter.vo;
 
 import java.util.Calendar;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import com.transporter.model.CustomerModel;
 
-import com.transporter.vo.CustomerVO;
-
-@SuppressWarnings("serial")
-@Entity(name = "CustomerModel")
-@Table(name = "customer")
-public class CustomerModel extends AbstractIdDomain {
-
+/**
+ * @author Devappa.Arali
+ *
+ */
+public class CustomerVO {
+	
+	private Integer id;
 	private String firstName;
 	private String lastName;
 	private String gender;
@@ -34,9 +27,16 @@ public class CustomerModel extends AbstractIdDomain {
 	private Calendar createdDate;
 	private Calendar dob;
 
-	private UserModel user;
+	private UserVO user;
 
-	@Column(name = "first_name", nullable = false)
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -45,7 +45,6 @@ public class CustomerModel extends AbstractIdDomain {
 		this.firstName = firstName;
 	}
 
-	@Column(name = "last_name", nullable = true)
 	public String getLastName() {
 		return lastName;
 	}
@@ -54,7 +53,6 @@ public class CustomerModel extends AbstractIdDomain {
 		this.lastName = lastName;
 	}
 
-	@Column(name = "gender", nullable = false)
 	public String getGender() {
 		return gender;
 	}
@@ -63,7 +61,6 @@ public class CustomerModel extends AbstractIdDomain {
 		this.gender = gender;
 	}
 
-	@Column(name = "mobile_number", nullable = false)
 	public String getMobileNumber() {
 		return mobileNumber;
 	}
@@ -72,7 +69,6 @@ public class CustomerModel extends AbstractIdDomain {
 		this.mobileNumber = mobileNumber;
 	}
 
-	@Column(name = "status", nullable = false)
 	public String getStatus() {
 		return status;
 	}
@@ -81,7 +77,6 @@ public class CustomerModel extends AbstractIdDomain {
 		this.status = status;
 	}
 
-	@Column(name = "email", nullable = true)
 	public String getEmail() {
 		return email;
 	}
@@ -90,7 +85,6 @@ public class CustomerModel extends AbstractIdDomain {
 		this.email = email;
 	}
 
-	@Column(name = "city", nullable = true)
 	public String getCity() {
 		return city;
 	}
@@ -99,7 +93,6 @@ public class CustomerModel extends AbstractIdDomain {
 		this.city = city;
 	}
 
-	@Column(name = "state", nullable = true)
 	public String getState() {
 		return state;
 	}
@@ -108,7 +101,6 @@ public class CustomerModel extends AbstractIdDomain {
 		this.state = state;
 	}
 
-	@Column(name = "street", nullable = true)
 	public String getStreet() {
 		return street;
 	}
@@ -117,7 +109,6 @@ public class CustomerModel extends AbstractIdDomain {
 		this.street = street;
 	}
 
-	@Column(name = "zipcode", nullable = true)
 	public String getZipCode() {
 		return zipCode;
 	}
@@ -126,7 +117,6 @@ public class CustomerModel extends AbstractIdDomain {
 		this.zipCode = zipCode;
 	}
 
-	@Column(name = "number_of_vehicle", nullable = true)
 	public Integer getNumberOfVehicle() {
 		return numberOfVehicle;
 	}
@@ -135,7 +125,6 @@ public class CustomerModel extends AbstractIdDomain {
 		this.numberOfVehicle = numberOfVehicle;
 	}
 
-	@Column(name = "created_date", nullable = false)
 	public Calendar getCreatedDate() {
 		return createdDate;
 	}
@@ -144,7 +133,6 @@ public class CustomerModel extends AbstractIdDomain {
 		this.createdDate = createdDate;
 	}
 
-	@Column(name = "dob", nullable = false)
 	public Calendar getDob() {
 		return dob;
 	}
@@ -153,28 +141,26 @@ public class CustomerModel extends AbstractIdDomain {
 		this.dob = dob;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	@JoinColumn(name = "user_id", nullable = true)
-	public UserModel getUser() {
+	public UserVO getUser() {
 		return user;
 	}
 
-	public void setUser(UserModel user) {
+	public void setUser(UserVO user) {
 		this.user = user;
 	}
 	
-	public static CustomerVO convertModelToVO(CustomerModel customerModel)
+	public CustomerModel convertVOToModel(CustomerVO customerVO)
 	{
-		CustomerVO customerVO = new CustomerVO();
-		if(null == customerModel)
+		CustomerModel customerModel = new CustomerModel();
+		if(null == customerVO)
 			return null;	
-		customerVO.setCreatedDate(customerModel.getCreatedDate());
-		customerVO.setEmail(customerModel.getEmail());
-		customerVO.setFirstName(customerModel.getFirstName());
-		customerVO.setId(customerModel.getId().intValue());
-		customerVO.setMobileNumber(customerModel.getMobileNumber());
-		customerVO.setUser(UserModel.convertModelToVO(customerModel.getUser()));
-		return customerVO;
+		customerModel.setCreatedDate(customerVO.getCreatedDate());
+		customerModel.setEmail(customerVO.getEmail());
+		customerModel.setFirstName(customerVO.getFirstName());
+		customerModel.setId(customerVO.getId().longValue());
+		customerModel.setMobileNumber(customerVO.getMobileNumber());
+		customerModel.setUser(UserVO.convertVOToModel(customerVO.getUser()));
+		
+		return customerModel;
 	}
-
 }

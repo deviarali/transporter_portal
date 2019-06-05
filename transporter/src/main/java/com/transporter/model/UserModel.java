@@ -2,6 +2,7 @@ package com.transporter.model;
 
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,9 +14,12 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.transporter.vo.UserRoleVO;
+import com.transporter.vo.UserVO;
 
 /**
  * @author SHARAN A
@@ -36,6 +40,8 @@ public class UserModel extends AbstractIdDomain {
     private Calendar loginDateTime;
 
 	private Set<UserRoleModel> userRoles;
+	
+	private List<CustomerModel> customers;
 	
 	@Column(name="name", nullable=false)
 	public String getUserName() {
@@ -129,6 +135,40 @@ public class UserModel extends AbstractIdDomain {
 
 	public void removeUserRole(UserRoleModel userRole) {
 		getUserRoles().remove(userRole);
+	}
+
+	@OneToMany(mappedBy = "user")
+	public List<CustomerModel> getCustomers() {
+		return customers;
+	}
+
+	public void setCustomers(List<CustomerModel> customers) {
+		this.customers = customers;
+	}
+	
+	public static UserVO convertModelToVO(UserModel userModel)
+	{
+		UserVO userVO = new UserVO();
+		if(null == userModel)
+			return null;
+		userVO.setId(userModel.getId());
+		userVO.setCreatedDate(userModel.getCreatedDate());
+		userVO.setLoginAttempts(userModel.getLoginAttempts());
+		userVO.setLoginDateTime(userModel.getLoginDateTime());
+		userVO.setLoginOtp(userModel.getLoginOtp());
+		userVO.setStatus(userModel.getStatus());
+		userVO.setUserName(userModel.getUserName());
+		userVO.setUserType(userModel.getUserType());
+		if(null != userModel.getUserRoles() && userModel.getUserRoles().size() > 0)
+		{
+			Set<UserRoleVO> roleVOs = new HashSet<>();
+			for(UserRoleModel userRoleModel : userModel.getUserRoles())
+			{
+				roleVOs.add(UserRoleModel.convertModelToVO(userRoleModel));
+			}
+			userVO.setUserRoles(roleVOs);
+		}
+		return userVO;
 	}
 
 }

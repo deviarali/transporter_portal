@@ -2,7 +2,7 @@ package com.transporter.model;
 
 public enum UserTypeModel {
 
-	OWNER("Owner"), DRIVER("Driver"), USER("User");
+	OWNER("Owner"), DRIVER("Driver"), USER("User"), CUSTOMER("Customer");
 
 	private String name;
 
