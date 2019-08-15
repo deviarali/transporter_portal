@@ -50,5 +50,21 @@ public class UserServiceImpl extends DefaultServiceImpl implements UserService {
 		return null;
 	}
 
+	@Override
+	public int generateOtp(String mobile) {
+		return userDao.generateOtp(mobile, generateOtp());
+	}
+
+	public String generateOtp()
+	{
+		return "55555";
+	}
+
+	@Override
+	public UserVO validateOtp(String mobile, String otp) {
+		
+		UserModel userModel = userDao.validateOtp(mobile, otp);
+		return UserModel.convertModelToVO(userModel);
+	}
 
 }

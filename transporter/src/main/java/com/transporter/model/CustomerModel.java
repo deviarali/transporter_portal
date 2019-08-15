@@ -168,10 +168,11 @@ public class CustomerModel extends AbstractIdDomain {
 		CustomerVO customerVO = new CustomerVO();
 		if(null == customerModel)
 			return null;	
-		customerVO.setCreatedDate(customerModel.getCreatedDate());
-		customerVO.setEmail(customerModel.getEmail());
-		customerVO.setFirstName(customerModel.getFirstName());
 		customerVO.setId(customerModel.getId().intValue());
+		customerVO.setFirstName(customerModel.getFirstName());
+		customerVO.setLastName(customerModel.getLastName());
+		customerVO.setEmail(customerModel.getEmail());
+		customerVO.setCreatedDate(customerModel.getCreatedDate());
 		customerVO.setMobileNumber(customerModel.getMobileNumber());
 		customerVO.setUser(UserModel.convertModelToVO(customerModel.getUser()));
 		return customerVO;

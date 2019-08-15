@@ -30,4 +30,25 @@ public class UserDaoImpl extends DefaultDaoImpl implements UserDao {
 		return userModel;
 	}
 
+	@Override
+	public int generateOtp(String mobile, String otp) {
+		int rows = 0;
+		String sqlQuery = "Update UserModel usr set usr.loginOtp= :otp where usr.userName= :mobileNumber";
+		Query query = getSession().createQuery(sqlQuery);
+		query.setParameter("mobileNumber", mobile);
+		query.setParameter("otp", otp);
+		rows = query.executeUpdate();
+		return rows;
+	}
+
+	@Override
+	public UserModel validateOtp(String mobile, String otp) {
+		String sqlQuery = "From UserModel usr where usr.userName= :mobileNumber and usr.loginOtp= :otp";
+		Query query = getSession().createQuery(sqlQuery);
+		query.setParameter("mobileNumber", mobile);
+		query.setParameter("otp", otp);
+		return (UserModel) query.uniqueResult();
+		
+	}
+
 }

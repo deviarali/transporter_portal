@@ -9,4 +9,8 @@ public interface UserDao extends DefaultDao {
 
 	UserModel login(UserVO userVO);
 
+	int generateOtp(String mobile, String generateOtp);
+
+	UserModel validateOtp(String mobile, String otp);
+
 }

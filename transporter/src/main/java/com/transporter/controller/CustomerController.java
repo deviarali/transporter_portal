@@ -10,7 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.mysql.jdbc.StringUtils;
 import com.transporter.constants.CommonConstants;
@@ -26,7 +28,7 @@ import com.transporter.vo.UserVO;
  *
  */
 
-@Controller
+@RestController
 public class CustomerController {
 	
 	private static final Logger LOG = LoggerFactory
@@ -36,7 +38,7 @@ public class CustomerController {
 	private CustomerService customerService;
 	
 	@RequestMapping(value = "customer/registerCustomer", method = RequestMethod.POST)
-	public @ResponseBody CommonResponse registerCustomer(@RequestBody CustomerVO customerVO)
+	public CommonResponse registerCustomer(@RequestBody CustomerVO customerVO)
 	{
 		CommonResponse response = null;
 		
@@ -56,10 +58,10 @@ public class CustomerController {
 			return response;
 		}
 		
-		Integer id = customerService.registerCustomer(customerVO);
-		if(id != null)
+		CustomerVO customer = customerService.registerCustomer(customerVO);
+		if(customer != null && customer.getId() != null)
 		{
-			response = RestUtils.wrapObjectForSuccess("Registered Successfully");
+			response = RestUtils.wrapObjectForSuccess(customer);
 			LOG.info("Owner registed successfully "+customerVO.getFirstName());
 		}
 		else
@@ -73,7 +75,7 @@ public class CustomerController {
 	}
 	
 	@RequestMapping(value = "customer/login", method = RequestMethod.POST)
-	public @ResponseBody CommonResponse login(@RequestBody UserVO userVO)
+	public CommonResponse login(@RequestBody UserVO userVO)
 	{
 		CommonResponse response = null;
 		
@@ -97,6 +99,54 @@ public class CustomerController {
 				LOG.error("Invalid credentials "+userVO.getUserName());
 			}
 		}
+		return response;
+	}
+	
+	@RequestMapping(value = "customer/updateCustomer", method = RequestMethod.POST)
+	public CommonResponse updateCustomer(@RequestBody CustomerVO customerVO)
+	{
+		CommonResponse response = null;
+		
+		try {
+			int result = customerService.updateCustomer(customerVO);
+			if(result != 0) {
+				LOG.info("Updated successfully");
+				response = RestUtils.wrapObjectForSuccess("success");
+			} else {
+				response = RestUtils.wrapObjectForFailure("Not updated, invalid customer id", "error", WebConstants.WEB_RESPONSE_ERORR);
+			}
+			return response;
+		}
+		catch (Exception exception)
+		{		
+			response = RestUtils.wrapObjectForFailure("Exception occured", "error", WebConstants.WEB_RESPONSE_ERORR);
+			LOG.error("Exception occured while updating customer : "+customerVO.getFirstName());
+		}
+		
+		return response;
+	}
+	
+	@RequestMapping(value = "customer/generateOtp", method = RequestMethod.POST)
+	public CommonResponse generateOtp(@RequestParam String mobile)
+	{
+		CommonResponse response = null;
+		int generated = customerService.generateOtp(mobile);
+		if(generated != 0)
+			response = RestUtils.wrapObjectForSuccess("success");
+		else
+			response = RestUtils.wrapObjectForFailure("Otp not generated, invalid user", "error", WebConstants.WEB_RESPONSE_ERORR);
+		return response;
+	}
+	
+	@RequestMapping(value = "customer/validateOtp", method = RequestMethod.POST)
+	public CommonResponse validateOtp(@RequestParam String mobile, @RequestParam String otp)
+	{
+		CommonResponse response = null;
+		CustomerVO customerVO = customerService.validateOtp(mobile, otp);
+		if(customerVO != null)
+			response = RestUtils.wrapObjectForSuccess(customerVO);
+		else
+			response = RestUtils.wrapObjectForFailure("invalid otp", "error", WebConstants.WEB_RESPONSE_ERORR);
 		return response;
 	}
 
@@ -140,10 +190,10 @@ public class CustomerController {
 			{
 				map.put("mobileNumber", CommonConstants.MOBILE_NUMBER_EMPTY);
 			}
-			if(StringUtils.isNullOrEmpty(customerVO.getUser().getPassword()) || StringUtils.isEmptyOrWhitespaceOnly(customerVO.getUser().getPassword()))
+			/*if(StringUtils.isNullOrEmpty(customerVO.getUser().getPassword()) || StringUtils.isEmptyOrWhitespaceOnly(customerVO.getUser().getPassword()))
 			{
 				map.put("user.password", CommonConstants.PASSWORD_EMPTY);
-			}
+			}*/
 		}
 		return map;
 	}

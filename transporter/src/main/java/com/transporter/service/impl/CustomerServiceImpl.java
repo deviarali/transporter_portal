@@ -45,20 +45,20 @@ public class CustomerServiceImpl extends DefaultServiceImpl implements CustomerS
 	
 	@Override
 	@Transactional
-	public Integer registerCustomer(CustomerVO customerVO) {
+	public CustomerVO registerCustomer(CustomerVO customerVO) {
 		UserModel userModel = new UserModel();
 		userModel.setRowVersion(1);
 		userModel.setCreatedDate(DateTimeUtils.getCurrentCalendar());
 		userModel.setUserName(customerVO.getMobileNumber());
 		userModel.setLoginAttempts(0);
-		userModel.setPassword(PasswordUtils.generateSecurePassword(customerVO.getUser().getPassword()));
+		//userModel.setPassword(PasswordUtils.generateSecurePassword(customerVO.getUser().getPassword()));
 		userModel.setStatus(true);
 		userModel.setUserType(UserTypeModel.CUSTOMER);
 		Set<UserRoleVO> userRoles = new HashSet<>();
 		UserRoleVO userRole = new UserRoleVO();
 		userRole.setId(2L);
 		userRoles.add(userRole);
-		customerVO.getUser().setUserRoles(userRoles);
+		/*customerVO.getUser().setUserRoles(userRoles);
 		
 		if(customerVO.getUser() != null && !CollectionUtils.isEmpty(customerVO.getUser().getUserRoles())) {
 			for (UserRoleVO userRoleVO : customerVO.getUser().getUserRoles()) {
@@ -67,17 +67,20 @@ public class CustomerServiceImpl extends DefaultServiceImpl implements CustomerS
 				
 				userModel.addUserRole(userRoleModel);
 			}
-		}
+		}*/
+		UserRoleModel userRoleModel = new UserRoleModel();
+		userRoleModel.setId(2L);;
 		
+		userModel.addUserRole(userRoleModel);
 		userService.saveDomain(userModel);
 		
 		CustomerModel customerModel = ModelVoConvertUtils.convertCustomerVOToCustomerModel(customerVO);
 		customerModel.setCreatedDate(DateTimeUtils.getCurrentCalendar());
 		customerModel.setUser(userModel);
 		
-		Long customerId = (Long) this.saveDomain(customerModel);
-		Integer i = customerId.intValue();
-		return i;
+		this.saveDomain(customerModel);
+		
+		return CustomerModel.convertModelToVO(customerModel);
 	}
 
 	@Override
@@ -97,7 +100,30 @@ public class CustomerServiceImpl extends DefaultServiceImpl implements CustomerS
 		return customerVO;
 	}
 
-	
-	
-	//public UserVO convertUserModelToVO(UserModel model)
+	@Override
+	public int updateCustomer(CustomerVO customerVO) {
+		int result = customerDao.updateCustomer(CustomerVO.convertVOToModel(customerVO));
+		return result;
+	}
+
+	@Override
+	public int generateOtp(String mobile) {
+		return userService.generateOtp(mobile);
+	}
+
+	@Override
+	public CustomerVO validateOtp(String mobile, String otp) {
+		UserVO userVO = userService.validateOtp(mobile, otp); 
+		CustomerVO customerVO = null;
+		if(userVO != null)
+		{
+			customerVO = findCustomerByUserId(userVO.getId());
+		}
+		return customerVO;
+	}
+
+	private CustomerVO findCustomerByUserId(Long id) {
+		return CustomerModel.convertModelToVO(customerDao.findCustomerByUserId(id));
+	}
+
 }

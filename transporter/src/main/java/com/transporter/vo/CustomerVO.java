@@ -149,15 +149,16 @@ public class CustomerVO {
 		this.user = user;
 	}
 	
-	public CustomerModel convertVOToModel(CustomerVO customerVO)
+	public static CustomerModel convertVOToModel(CustomerVO customerVO)
 	{
 		CustomerModel customerModel = new CustomerModel();
 		if(null == customerVO)
 			return null;	
-		customerModel.setCreatedDate(customerVO.getCreatedDate());
-		customerModel.setEmail(customerVO.getEmail());
-		customerModel.setFirstName(customerVO.getFirstName());
 		customerModel.setId(customerVO.getId().longValue());
+		customerModel.setFirstName(customerVO.getFirstName());
+		customerModel.setLastName(customerVO.getLastName());
+		customerModel.setEmail(customerVO.getEmail());
+		customerModel.setCreatedDate(customerVO.getCreatedDate());
 		customerModel.setMobileNumber(customerVO.getMobileNumber());
 		customerModel.setUser(UserVO.convertVOToModel(customerVO.getUser()));
 		

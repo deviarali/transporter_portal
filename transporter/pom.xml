@@ -31,12 +31,12 @@
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 
-		<!-- Tomcat embedded container -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
+		  <!-- Instruct spring boot not to use the inbuilt Tomcat server -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
 		<dependency>
 		  <groupId>org.springframework.boot</groupId>
